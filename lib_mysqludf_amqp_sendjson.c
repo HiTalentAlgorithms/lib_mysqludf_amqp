@@ -10,7 +10,7 @@
 #include "lib_mysqludf_amqp.h"
 #include "send.h"
 
-my_bool
+bool
 lib_mysqludf_amqp_sendjson_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
 {
     return lib_mysqludf_amqp_send_init(initid, args, message);

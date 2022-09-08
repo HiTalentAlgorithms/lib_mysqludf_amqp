@@ -7,7 +7,7 @@
 extern "C" {
 #endif
 
-    my_bool lib_mysqludf_amqp_send_init(UDF_INIT *initid, UDF_ARGS *args, char *message);
+    bool lib_mysqludf_amqp_send_init(UDF_INIT *initid, UDF_ARGS *args, char *message);
     char *lib_mysqludf_amqp_send(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error, char *content_type);
     void lib_mysqludf_amqp_send_deinit(UDF_INIT *initid);
 

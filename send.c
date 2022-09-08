@@ -20,7 +20,7 @@ typedef struct conn_info {
     amqp_connection_state_t conn;
 } conn_info_t;
 
-my_bool
+bool
 lib_mysqludf_amqp_send_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
 {
 

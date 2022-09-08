@@ -9,7 +9,7 @@
 
 #include "lib_mysqludf_amqp.h"
 
-my_bool
+bool
 lib_mysqludf_amqp_info_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
 {
 
