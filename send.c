@@ -31,10 +31,11 @@ lib_mysqludf_amqp_send_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
     amqp_rpc_reply_t reply;
     conn_info_t *conn_info;
 
-    if (args->arg_count != 4 || (args->arg_type[0] != STRING_RESULT)        /* url */
+    if (args->arg_count != 5 || (args->arg_type[0] != STRING_RESULT)        /* url */
                              || (args->arg_type[1] != STRING_RESULT)        /* exchange */
                              || (args->arg_type[2] != STRING_RESULT)        /* routing key */
-                             || (args->arg_type[3] != STRING_RESULT)) {     /* message */
+                             || (args->arg_type[3] != STRING_RESULT)        /* message */
+                             || (args->arg_type[4] != INT_RESULT)) {        /* priority */
         (void) strncpy(message, "lib_mysqludf_amqp_send: invalid arguments", MYSQL_ERRMSG_SIZE);
         return 1;
     }
@@ -121,6 +122,8 @@ lib_mysqludf_amqp_send(UDF_INIT *initid, UDF_ARGS *args, char* result, unsigned 
         .bytes = args->args[3],
         .len = args->lengths[3],
     };
+    uint8_t priority = (uint8_t) *args->args[4];
+
     conn_info_t *conn_info = (conn_info_t *) initid->ptr;
     amqp_table_entry_t headers[1];
     amqp_basic_properties_t props;
@@ -154,6 +157,10 @@ lib_mysqludf_amqp_send(UDF_INIT *initid, UDF_ARGS *args, char* result, unsigned 
     ssiuuidgen(result);
     props.message_id = amqp_cstring_bytes(result);
     props._flags |= AMQP_BASIC_MESSAGE_ID_FLAG;
+
+    /* priority */
+    props.priority = priority;
+    props._flags |= AMQP_BASIC_PRIORITY_FLAG;
 
     rc = amqp_basic_publish(conn_info->conn, 1, exchange, routing_key, 0, 0, &props, payload);
     if (rc < 0) {
